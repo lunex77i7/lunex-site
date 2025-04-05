@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Lunex – Achetez votre crypto</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9f9;
+      color: #222;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 0.2em;
+    }
+
+    p {
+      font-size: 1.2rem;
+      max-width: 500px;
+      margin-bottom: 2em;
+    }
+
+    button {
+      background-color: #222;
+      color: #fff;
+      border: none;
+      padding: 1em 2em;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #444;
+    }
+
+    .message {
+      margin-top: 1.5em;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <h1>Lunex</h1>
+  <p>La nouvelle cryptomonnaie simple et élégante. Achetez facilement via carte ou portefeuille électronique.</p>
+  <button onclick="buy()">Acheter Lunex</button>
+  <div class="message" id="message"></div>
+
+  <script>
+    function buy() {
+      const msg = document.getElementById('message');
+      msg.innerText = "Merci pour votre intérêt ! Le module de paiement sera bientôt disponible.";
+    }
+  </script>
+</body>
+</html>
