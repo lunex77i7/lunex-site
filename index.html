@@ -2,64 +2,58 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Lunex – Achetez votre crypto</title>
+  <title>Lunex Token</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f9f9f9;
-      color: #222;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+      font-family: Arial, sans-serif;
       text-align: center;
+      padding: 50px;
+      background-color: #f4f4f4;
     }
-
-    h1 {
-      font-size: 3rem;
-      margin-bottom: 0.2em;
-    }
-
-    p {
-      font-size: 1.2rem;
-      max-width: 500px;
-      margin-bottom: 2em;
-    }
-
-    button {
-      background-color: #222;
-      color: #fff;
-      border: none;
-      padding: 1em 2em;
+    input, button {
+      padding: 10px;
+      margin: 10px;
       font-size: 1rem;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background 0.3s;
     }
-
-    button:hover {
-      background-color: #444;
-    }
-
-    .message {
-      margin-top: 1.5em;
-      color: green;
+    #balance {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
-  <h1>Lunex</h1>
-  <p>La nouvelle cryptomonnaie simple et élégante. Achetez facilement via carte ou portefeuille électronique.</p>
-  <button onclick="buy()">Acheter Lunex</button>
-  <div class="message" id="message"></div>
+  <h1>Lunex Token (LNX)</h1>
+  <div id="balance">Solde: <strong>1000</strong> LNX</div>
+
+  <div>
+    <input type="text" id="receiver" placeholder="Destinataire">
+    <input type="number" id="amount" placeholder="Montant" min="1">
+    <button onclick="send()">Envoyer</button>
+  </div>
+
+  <div id="message"></div>
 
   <script>
-    function buy() {
-      const msg = document.getElementById('message');
-      msg.innerText = "Merci pour votre intérêt ! Le module de paiement sera bientôt disponible.";
+    let balance = 1000;
+
+    function send() {
+      const receiver = document.getElementById('receiver').value;
+      const amount = parseInt(document.getElementById('amount').value);
+
+      if (!receiver || isNaN(amount) || amount <= 0) {
+        document.getElementById('message').innerText = "Entrez un destinataire et un montant valide.";
+        return;
+      }
+
+      if (amount > balance) {
+        document.getElementById('message').innerText = "Solde insuffisant.";
+        return;
+      }
+
+      balance -= amount;
+      document.getElementById('balance').innerHTML = `Solde: <strong>${balance}</strong> LNX`;
+      document.getElementById('message').innerText = `Vous avez envoyé ${amount} LNX à ${receiver}.`;
     }
   </script>
 </body>
