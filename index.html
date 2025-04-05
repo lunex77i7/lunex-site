@@ -2,59 +2,145 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Lunex Token</title>
+  <title>Lunex Wallet</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #1e1e2f, #282840);
+      color: #f4f4f4;
       text-align: center;
-      padding: 50px;
-      background-color: #f4f4f4;
+      padding: 40px;
     }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5em;
+      color: #00ffc8;
+    }
+
+    .wallet {
+      background: #2e2e44;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 400px;
+      margin: auto;
+    }
+
     input, button {
       padding: 10px;
-      margin: 10px;
+      margin: 10px 5px;
       font-size: 1rem;
+      border: none;
+      border-radius: 5px;
     }
+
+    input {
+      width: 60%;
+    }
+
+    button {
+      background-color: #00ffc8;
+      color: #1e1e2f;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #00c9a7;
+    }
+
     #balance {
-      font-size: 1.5rem;
-      margin-bottom: 20px;
+      font-size: 1.2rem;
+      margin: 15px 0;
+    }
+
+    #history {
+      text-align: left;
+      margin-top: 20px;
+      font-size: 0.9rem;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
+    .msg {
+      margin-top: 15px;
+      color: #90ee90;
+    }
+
+    .footer {
+      margin-top: 40px;
+      font-size: 0.8rem;
+      opacity: 0.5;
     }
   </style>
 </head>
 <body>
-  <h1>Lunex Token (LNX)</h1>
-  <div id="balance">Solde: <strong>1000</strong> LNX</div>
-
-  <div>
+  <h1>Lunex Wallet</h1>
+  <div class="wallet">
+    <div id="user-id"></div>
+    <div id="balance">Solde: <strong>0</strong> LNX</div>
+    
     <input type="text" id="receiver" placeholder="Destinataire">
     <input type="number" id="amount" placeholder="Montant" min="1">
     <button onclick="send()">Envoyer</button>
+    
+    <div class="msg" id="message"></div>
+    <div id="history"></div>
   </div>
 
-  <div id="message"></div>
+  <div class="footer">Simulateur crypto – Lunex (LNX)</div>
 
   <script>
-    let balance = 1000;
+    const uid = localStorage.getItem("lunex_user") || "user_" + Math.floor(Math.random() * 10000);
+    localStorage.setItem("lunex_user", uid);
+    document.getElementById("user-id").innerHTML = "<strong>ID :</strong> " + uid;
+
+    let balance = localStorage.getItem("lunex_balance");
+    if (!balance) {
+      balance = 1000;
+      localStorage.setItem("lunex_balance", balance);
+    }
+    updateBalance();
+
+    function updateBalance() {
+      document.getElementById("balance").innerHTML = `Solde: <strong>${balance}</strong> LNX`;
+    }
 
     function send() {
-      const receiver = document.getElementById('receiver').value;
-      const amount = parseInt(document.getElementById('amount').value);
+      const receiver = document.getElementById("receiver").value;
+      const amount = parseInt(document.getElementById("amount").value);
+      const msg = document.getElementById("message");
 
       if (!receiver || isNaN(amount) || amount <= 0) {
-        document.getElementById('message').innerText = "Entrez un destinataire et un montant valide.";
+        msg.innerText = "Entrez un destinataire et un montant valide.";
         return;
       }
 
       if (amount > balance) {
-        document.getElementById('message').innerText = "Solde insuffisant.";
+        msg.innerText = "Solde insuffisant.";
         return;
       }
 
       balance -= amount;
-      document.getElementById('balance').innerHTML = `Solde: <strong>${balance}</strong> LNX`;
-      document.getElementById('message').innerText = `Vous avez envoyé ${amount} LNX à ${receiver}.`;
+      localStorage.setItem("lunex_balance", balance);
+      updateBalance();
+
+      const tx = `${new Date().toLocaleString()} - Envoyé ${amount} LNX à ${receiver}`;
+      const prev = localStorage.getItem("lunex_history") || "";
+      localStorage.setItem("lunex_history", tx + "\n" + prev);
+      msg.innerText = `Transaction réussie vers ${receiver}.`;
+      updateHistory();
     }
+
+    function updateHistory() {
+      const history = localStorage.getItem("lunex_history") || "";
+      const formatted = history.split("\n").filter(line => line.trim() !== "").map(line => `<div>• ${line}</div>`).join("");
+      document.getElementById("history").innerHTML = "<h3>Historique</h3>" + formatted;
+    }
+
+    updateHistory();
   </script>
 </body>
 </html>
